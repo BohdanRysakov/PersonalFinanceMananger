@@ -9,7 +9,9 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -37,8 +39,8 @@ public class User {
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<BudgetInfo> budgetInfo;
+    @ManyToMany(mappedBy = "user")
+    private Set<BudgetInfo> budgetInfo = new HashSet<>();
 
 
 }

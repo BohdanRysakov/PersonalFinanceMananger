@@ -25,10 +25,10 @@ public class BudgetController {
         return budgetService.getBudget(id);
     }
 
-    @PostMapping
-    public Budget addBudget(@RequestBody Budget budget) {
-        return budgetService.addBudget(budget);
-    }
+//    @PostMapping
+//    public Budget addBudget(@RequestBody Budget budget) {
+//        return budgetService.createBudget(budget);
+//    }
 
     @PutMapping("/{id}")
     public Budget updateBudget(@PathVariable UUID id, @RequestBody Budget budget) {

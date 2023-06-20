@@ -1,10 +1,13 @@
 package com.pfma.model;
 
+import com.pfma.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -13,15 +16,16 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class BudgetInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private List<User> users;
 
     @OneToOne
     @JoinColumn(name = "budget_id", nullable = false)
@@ -47,4 +51,34 @@ public class BudgetInfo {
 
     @Column(nullable = false)
     private boolean changingAllowed = true;
+
+
+    public void addUser(User user){
+        this.users.add(user);
+    }
+    public void addUsers(List<User> userList){
+        this.users.addAll(userList);
+    }
+    public void deleteUser(User user){
+        this.users.remove(user);
+    }
+    public void deleteUsers(List<User> userList){
+        this.users.removeAll(userList);
+    }
+    public void setRoles(User user, Set<Role> roleNameSet){
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        BudgetInfo that = (BudgetInfo) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
+    }
 }
