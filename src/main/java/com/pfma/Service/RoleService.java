@@ -1,42 +1,31 @@
 package com.pfma.Service;
 
-
-import com.pfma.model.Role;
-import com.pfma.repository.RoleRepository;
-import org.springframework.beans.BeanUtils;
+import com.pfma.model.postgresdb1.Role;
+import com.pfma.repository.postgresdb1.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 public class RoleService {
+
     @Autowired
     private RoleRepository roleRepository;
 
-    public List<Role> getRoles() {
-        return roleRepository.findAll();
-    }
-
-    public Role getRole(UUID id) {
-        return roleRepository.findById(id).orElse(null);
-    }
-
-    public Role addRole(Role role) {
+    public Role createRole(Role role) {
         return roleRepository.save(role);
     }
 
-    public Role updateRole(UUID id, Role role) {
-        Role existingRole = getRole(id);
-        if (existingRole != null) {
-            BeanUtils.copyProperties(role, existingRole, "id");
-            return roleRepository.save(existingRole);
-        }
-        return null;
+    public Optional<Role> getRole(Long id) {
+        return roleRepository.findById(id);
     }
 
-    public void deleteRole(UUID id) {
+    public Role updateRole(Role role) {
+        return roleRepository.save(role);
+    }
+
+    public void deleteRole(Long id) {
         roleRepository.deleteById(id);
     }
 }

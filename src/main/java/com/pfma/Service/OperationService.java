@@ -1,41 +1,43 @@
 package com.pfma.Service;
 
-import com.pfma.model.Operation;
-import com.pfma.repository.OperationRepository;
-import org.springframework.beans.BeanUtils;
+import com.pfma.model.postgresdb1.Operation;
+import com.pfma.model.postgresdb1.User;
+import com.pfma.repository.postgresdb1.OperationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class OperationService {
+
     @Autowired
     private OperationRepository operationRepository;
 
-    public List<Operation> getOperations() {
-        return operationRepository.findAll();
-    }
+    @Autowired
+    private UserService userService;
 
-    public Operation getOperation(UUID id) {
-        return operationRepository.findById(id).orElse(null);
-    }
-
-    public Operation addOperation(Operation operation) {
+    public Operation createOperation(Operation operation) {
         return operationRepository.save(operation);
     }
 
-    public Operation updateOperation(UUID id, Operation operation) {
-        Operation existingOperation = getOperation(id);
-        if (existingOperation != null) {
-            BeanUtils.copyProperties(operation, existingOperation, "id");
-            return operationRepository.save(existingOperation);
-        }
-        return null;
+    public Optional<Operation> getOperation(UUID id) {
+        return operationRepository.findById(id);
+    }
+
+    public Operation updateOperation(Operation operation) {
+        return operationRepository.save(operation);
     }
 
     public void deleteOperation(UUID id) {
         operationRepository.deleteById(id);
+    }
+
+    public void assignOperationToUser(UUID operationId, UUID userId) {
+        Operation operation = getOperation(operationId).orElseThrow(() -> new RuntimeException("Operation not found"));
+        User user = userService.getUser(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        operation.setUser(user);
+        operationRepository.save(operation);
     }
 }
