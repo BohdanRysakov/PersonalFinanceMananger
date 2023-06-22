@@ -30,6 +30,9 @@ public class Budget {
     @Column
     private boolean accrueMoneyOperation;
 
+    @ManyToMany
+    private List<User> users;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "budget")
     private List<Operation> operations;
 
